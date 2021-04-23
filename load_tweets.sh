@@ -1,4 +1,4 @@
-dir='/data-fast/twitter 2020'
+dir='/data/Twitter dataset'
 files='
 geoTwitter20-04-01.zip
 '
@@ -11,9 +11,9 @@ geoTwitter20-04-01.zip
 mkdir -p nohup
 
 for file in $files; do
-    nohup python3 -u load_tweets.py --db=postgres://postgres:pass@localhost:15432/ --inputs="$dir"/$file > nohup/nohup.$file &
+    nohup python3 -u load_tweets.py --db=postgresql://postgres:pass@localhost:2304/ --inputs="$dir"/$file > nohup/nohup.$file &
 done
 
 for file in $files; do
-    unzip -p "$dir"/$file | sed 's/\\u0000//g' | psql postgresql://postgres:pass@localhost:25432/ -c "COPY tweets_jsonb (data) FROM STDIN csv quote e'\x01' delimiter e'\x02';"
+    unzip -p "$dir"/$file | sed 's/\\u0000//g' | psql postgres://postgres:pass@localhost:2303/ -c "COPY tweets_jsonb (data) FROM STDIN csv quote e'\x01' delimiter e'\x02';"
 done
